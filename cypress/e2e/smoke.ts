@@ -1,5 +1,5 @@
-describe("smoke tests", () => {
-  it("should visit", () => {
-    cy.visit("/");
-  });
-});
+describe('smoke tests', () => {
+  it('should visit', () => {
+    cy.visit('/')
+  })
+})
