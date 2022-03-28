@@ -4,7 +4,4 @@ node_modules
 /public/build
 .env
 
-/cypress/screenshots
-/cypress/videos
-
 /app/styles/tailwind.css
