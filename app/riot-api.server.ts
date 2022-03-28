@@ -14,7 +14,7 @@ export const regions = {
   TR: 'TR1',
 }
 
-type Region = keyof typeof regions
+export type Region = keyof typeof regions
 
 export function isValidRegion(regionName: string): regionName is Region {
   return regions.hasOwnProperty(regionName)
@@ -108,7 +108,9 @@ export async function getLeagueEntries(
   region: Region
 ): Promise<LeagueEntryDTO[]> {
   const cacheKey = `${region}-${summonerId}`
-  if (leagueEntryCache.has(cacheKey)) return leagueEntryCache.get(cacheKey)!
+  if (leagueEntryCache.has(cacheKey)) {
+    return leagueEntryCache.get(cacheKey)!
+  }
 
   const response = await fetchLeagueAPI(
     region,
