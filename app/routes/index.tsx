@@ -20,7 +20,6 @@ type ActionData = { url?: string; error?: string }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-
   const summonerName = encodeURIComponent(String(formData.get('summonerName')))
   const region = String(formData.get('region')).toUpperCase()
   if (!isValidRegion(region))

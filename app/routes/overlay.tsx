@@ -32,12 +32,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   invariant(isValidRegion(region), 'Invalid region provided')
 
   const { id, name } = await getSummonerByName(summonerName, region)
-
   const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
     id,
     region
   )
-
   const rankNumber = romanToNumber(rank)
   const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.png`
 
