@@ -21,9 +21,7 @@ function createCache() {
 if (process.env.NODE_ENV === 'production') {
   cache = createCache()
 } else {
-  if (!global.__cache__) {
-    global.__cache__ = createCache()
-  }
+  if (!global.__cache__) global.__cache__ = createCache()
   cache = global.__cache__
 }
 
@@ -32,10 +30,7 @@ export async function withCache<TData>(
   callback: () => Promise<TData>
 ): Promise<TData> {
   const cached = cache.get(key)
-  if (cached) {
-    console.log('from cache')
-    return cached
-  }
+  if (cached) return cached
   const result = await callback()
   cache.set(key, result)
   return result
