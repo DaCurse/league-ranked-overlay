@@ -53,7 +53,7 @@ export default function Index() {
   }, [state])
 
   return (
-    <div className="flex h-screen items-center justify-center dark:bg-slate-900">
+    <main className="flex h-screen items-center justify-center dark:bg-slate-900">
       <Form
         ref={formRef}
         className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md dark:bg-slate-800"
@@ -76,6 +76,9 @@ export default function Index() {
             type="text"
             id="summonerName"
             name="summonerName"
+            required
+            minLength={3}
+            maxLength={16}
           />
         </div>
         <div className="mb-4">
@@ -123,6 +126,6 @@ export default function Index() {
           Generate
         </button>
       </Form>
-    </div>
+    </main>
   )
 }
