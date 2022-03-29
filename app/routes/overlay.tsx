@@ -1,11 +1,7 @@
 import { useEffect } from 'react'
 import { HeadersFunction, json, LoaderFunction, useLoaderData } from 'remix'
 import invariant from 'tiny-invariant'
-import {
-  getLeagueEntries,
-  getSummonerByName,
-  isValidRegion,
-} from '~/riot-api.server'
+import { getLeagueEntry, getSummonerByName, isValidRegion } from '~/riot-api'
 import { romanToNumber } from '~/utils.server'
 
 const MILLISECONDS_PER_SECOND = 1000
@@ -37,10 +33,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const { id, name } = await getSummonerByName(summonerName, region)
 
-  const entries = await getLeagueEntries(id, region)
-  invariant(entries.length > 0, 'No league entries found')
+  const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
+    id,
+    region
+  )
 
-  const { tier, rank, wins, losses, leaguePoints } = entries[0]
   const rankNumber = romanToNumber(rank)
   const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.png`
 

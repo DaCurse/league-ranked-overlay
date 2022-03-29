@@ -8,7 +8,7 @@ import {
   useLoaderData,
   useTransition,
 } from 'remix'
-import { isValidRegion, Region, regions } from '~/riot-api.server'
+import { isValidRegion, Region, regions } from '~/riot-api'
 
 type LoaderData = Region[]
 
