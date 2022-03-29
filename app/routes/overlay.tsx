@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     region
   )
   const rankNumber = romanToNumber(rank)
-  const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.png`
+  const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
 
   return json<LoaderData>({
     summonerName: name,
