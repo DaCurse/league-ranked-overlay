@@ -8,7 +8,7 @@ import {
   useLoaderData,
   useTransition,
 } from 'remix'
-import { isValidRegion, Region, regions } from '~/riot-api'
+import { Region, regions } from '~/riot-api'
 
 type LoaderData = Region[]
 
@@ -16,17 +16,17 @@ export const loader: LoaderFunction = async () => {
   return json<LoaderData>(Object.keys(regions) as Region[])
 }
 
-type ActionData = { url?: string; error?: string }
+type ActionData = { url: string }
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  const summonerName = encodeURIComponent(String(formData.get('summonerName')))
+  const summonerName = String(formData.get('summonerName'))
   const region = String(formData.get('region')).toUpperCase()
-  if (!isValidRegion(region))
-    return json<ActionData>({ error: 'Invalid region provided' })
+
+  const searchParams = new URLSearchParams({ summonerName, region })
 
   return json<ActionData>({
-    url: `/overlay?summonerName=${summonerName}&region=${region}`,
+    url: `/overlay?${searchParams}`,
   })
 }
 
@@ -34,22 +34,17 @@ export default function Index() {
   const loaderData = useLoaderData<LoaderData>()
   const actionData = useActionData<ActionData>()
   const transition = useTransition()
-  const state: 'idle' | 'submitting' | 'error' = actionData?.error
-    ? 'error'
-    : transition.state === 'submitting'
-    ? 'submitting'
-    : 'idle'
 
   const inputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    if (state === 'submitting') {
+    if (transition.state === 'submitting') {
       formRef.current?.reset()
     } else {
       inputRef.current?.focus()
     }
-  }, [state])
+  }, [transition.state])
 
   return (
     <main className="flex h-screen flex-col overflow-auto dark:bg-slate-900">
@@ -100,11 +95,8 @@ export default function Index() {
               ))}
             </select>
           </div>
-          <div className="mb-4">
-            {actionData?.error && (
-              <p className="text-xs italic text-red-500">{actionData.error}</p>
-            )}
-            {actionData?.url && (
+          {actionData?.url && (
+            <div className="mb-4">
               <p className="text-xs italic text-green-500">
                 Generated link:{' '}
                 <a
@@ -116,12 +108,12 @@ export default function Index() {
                   {`${location.origin}${actionData.url}`}
                 </a>
               </p>
-            )}
-          </div>
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <button
-              className="focus:shadow-outline rounded bg-blue-800 py-2 px-4 font-bold text-white hover:bg-blue-900 focus:outline-none"
-              disabled={state === 'submitting'}
+              className="focus:shadow-outline rounded bg-blue-800 py-2 px-4 font-bold text-white transition hover:bg-blue-900 focus:outline-none disabled:bg-gray-200 disabled:text-gray-500"
+              disabled={transition.state === 'submitting'}
               type="submit"
             >
               Generate
