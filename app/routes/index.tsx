@@ -117,13 +117,29 @@ export default function Index() {
             </p>
           )}
         </div>
-        <button
-          className="focus:shadow-outline rounded bg-blue-800 py-2 px-4 font-bold text-white hover:bg-blue-900 focus:outline-none"
-          disabled={state === 'submitting'}
-          type="submit"
-        >
-          Generate
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            className="focus:shadow-outline rounded bg-blue-800 py-2 px-4 font-bold text-white hover:bg-blue-900 focus:outline-none"
+            disabled={state === 'submitting'}
+            type="submit"
+          >
+            Generate
+          </button>
+          <a
+            className="inline-block h-8 w-8 align-baseline hover:opacity-60 dark:invert"
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/DaCurse/league-ranked-overlay"
+            title="GitHub Repository"
+          >
+            <object
+              className="pointer-events-none"
+              data="/assets/github.svg"
+              type="image/svg+xml"
+              aria-label="GitHub"
+            ></object>
+          </a>
+        </div>
       </Form>
     </main>
   )

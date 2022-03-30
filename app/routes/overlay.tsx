@@ -46,7 +46,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       region
     )
     const rankNumber = romanToNumber(rank)
-    const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
+    const rankImage = `/assets/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
 
     return json<LoaderData>({
       summonerName: name,
@@ -90,7 +90,7 @@ export default function Overlay() {
 
   return (
     <>
-      <img src={image} alt={`${tier} ${rank}`} />
+      <img className="h-16 w-16" src={image} alt={`${tier} ${rank}`} />
       <h1>
         {summonerName} <small>{region}</small>
       </h1>
