@@ -57,7 +57,12 @@ export function ErrorBoundary({ error }: { error: Error }) {
       <main className="flex h-screen items-center justify-center dark:bg-slate-900">
         <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 text-slate-700 shadow-md dark:bg-slate-800 dark:text-white">
           <h1 className="mb-4 text-2xl font-bold ">An error occurred</h1>
-          <p className="mb-2">{error.message}</p>
+          <p className="mb-2">
+            <span>{error.message}</span>
+            {process.env.NODE_ENV !== 'production' && (
+              <pre className="whitespace-pre-wrap">{error.stack}</pre>
+            )}
+          </p>
           <Link
             className="inline-block align-baseline text-blue-500 hover:text-blue-800"
             to="/"
@@ -79,6 +84,7 @@ export function CatchBoundary() {
           <h1 className="mb-4 text-2xl font-bold ">
             {caught.status} {caught.statusText}
           </h1>
+          <p className="mb-2">{caught.data}</p>
           <Link
             className="inline-block align-baseline text-blue-500 hover:text-blue-800"
             to="/"

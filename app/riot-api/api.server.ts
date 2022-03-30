@@ -1,4 +1,9 @@
 import { withCache } from './cache.server'
+import {
+  QueueEntryNotFoundError,
+  RiotAPIError,
+  SummonerNotFoundError,
+} from './errors.server'
 import { getRegionURL, Region } from './region.server'
 
 export interface SummonerDTO {
@@ -59,8 +64,9 @@ export function getSummonerByName(name: string, region: Region) {
     )
 
     if (response.status !== 200) {
-      if (response.status === 404) throw new Error('Summoner not found')
-      throw new Error('Invalid response from Riot API')
+      console.error(await response.json())
+      if (response.status === 404) throw new SummonerNotFoundError()
+      throw new RiotAPIError()
     }
 
     return await response.json()
@@ -74,14 +80,16 @@ export function getLeagueEntry(summonerId: string, region: Region) {
       `lol/league/v4/entries/by-summoner/${summonerId}`
     )
 
-    if (response.status !== 200)
-      throw new Error('Invalid response from Riot API')
+    if (response.status !== 200) {
+      console.error(await response.json())
+      throw new RiotAPIError()
+    }
 
     const entries = await response.json()
     const soloQueueEntry = entries.find(
       (entry: LeagueEntryDTO) => entry.queueType === SOLO_QUEUE
     )
-    if (!soloQueueEntry) throw new Error('No solo queue entry found')
+    if (!soloQueueEntry) throw new QueueEntryNotFoundError()
 
     return soloQueueEntry
   })

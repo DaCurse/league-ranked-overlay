@@ -1,7 +1,13 @@
 import { useEffect } from 'react'
 import { HeadersFunction, json, LoaderFunction, useLoaderData } from 'remix'
-import invariant from 'tiny-invariant'
-import { getLeagueEntry, getSummonerByName, isValidRegion } from '~/riot-api'
+import {
+  getLeagueEntry,
+  getSummonerByName,
+  isValidRegion,
+  QueueEntryNotFoundError,
+  RiotAPIError,
+  SummonerNotFoundError,
+} from '~/riot-api'
 import { romanToNumber } from '~/utils.server'
 
 const MILLISECONDS_PER_SECOND = 1000
@@ -26,29 +32,40 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url)
 
   const summonerName = searchParams.get('summonerName')
-  invariant(typeof summonerName === 'string', 'No summoner name provided')
+  if (typeof summonerName !== 'string')
+    throw new Response('No summoner name provided', { status: 400 })
 
   const region = String(searchParams.get('region')).toUpperCase()
-  invariant(isValidRegion(region), 'Invalid region provided')
+  if (!isValidRegion(region))
+    throw new Response('Invalid region provided', { status: 400 })
 
-  const { id, name } = await getSummonerByName(summonerName, region)
-  const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
-    id,
-    region
-  )
-  const rankNumber = romanToNumber(rank)
-  const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
+  try {
+    const { id, name } = await getSummonerByName(summonerName, region)
+    const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
+      id,
+      region
+    )
+    const rankNumber = romanToNumber(rank)
+    const rankImage = `/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
 
-  return json<LoaderData>({
-    summonerName: name,
-    region,
-    tier,
-    rank,
-    wins,
-    losses,
-    leaguePoints,
-    image: rankImage,
-  })
+    return json<LoaderData>({
+      summonerName: name,
+      region,
+      tier,
+      rank,
+      wins,
+      losses,
+      leaguePoints,
+      image: rankImage,
+    })
+  } catch (error) {
+    if (error instanceof SummonerNotFoundError)
+      throw new Response('Summoner not found', { status: 404 })
+    if (error instanceof QueueEntryNotFoundError)
+      throw new Response('No solo queue data found', { status: 404 })
+    if (error instanceof RiotAPIError)
+      throw new Response('Riot API error', { status: 500 })
+  }
 }
 
 export default function Overlay() {
