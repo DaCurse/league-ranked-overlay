@@ -10,10 +10,16 @@ import {
   ScrollRestoration,
   useCatch,
 } from 'remix'
-import tailwindStylesheetUrl from './styles/tailwind.css'
+import tailwindStylesheetUrl from './styles/tailwind_out.css'
 
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: tailwindStylesheetUrl }]
+  return [
+    { rel: 'stylesheet', href: tailwindStylesheetUrl },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap',
+    },
+  ]
 }
 
 export const meta: MetaFunction = () => ({
@@ -31,10 +37,16 @@ function Document({ children }: DocumentProps) {
   return (
     <html lang="en" className="h-full">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full font-inter">
         {children}
         <ScrollRestoration />
         <Scripts />

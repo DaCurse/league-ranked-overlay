@@ -100,23 +100,23 @@ export default function Overlay() {
 
   return (
     <div
-      className="flex items-center justify-start"
+      className="flex items-center justify-start "
       style={{ color: textColor }}
     >
       <div>
         <img className="h-24 w-24" src={image} alt={`${tier} ${rank}`} />
       </div>
       <div>
-        <div className="font-bold">
+        <div className="font-beaufort text-lg font-bold">
           {summonerName} <sup>{region}</sup>
         </div>
-        <h2>
+        <div>
           {capitalize(tier)} {rank} {leaguePoints}LP
-        </h2>
-        <p>
+        </div>
+        <p className="text-sm">
           <span className="text-green-500">{wins}W</span>{' '}
           <span className="text-red-500">{losses}L</span>{' '}
-          <span className="text-sm">({(100 * winRatio).toFixed(1)}%)</span>
+          <span>({(100 * winRatio).toFixed(1)}%)</span>
         </p>
       </div>
     </div>
