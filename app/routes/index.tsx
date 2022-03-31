@@ -22,8 +22,9 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const summonerName = String(formData.get('summonerName'))
   const region = String(formData.get('region')).toUpperCase()
+  const textColor = String(formData.get('textColor'))
 
-  const searchParams = new URLSearchParams({ summonerName, region })
+  const searchParams = new URLSearchParams({ summonerName, region, textColor })
 
   return json<ActionData>({
     url: `/overlay?${searchParams}`,
@@ -95,9 +96,25 @@ export default function Index() {
               ))}
             </select>
           </div>
+          <div className="mb-4">
+            <label
+              className="mb-2 block text-sm font-bold text-slate-700 dark:text-white"
+              htmlFor="textColor"
+            >
+              Text Color
+            </label>
+            <input
+              ref={inputRef}
+              className="focus:shadow-outline rounded border leading-tight shadow focus:outline-none"
+              type="color"
+              id="textColor"
+              name="textColor"
+              defaultValue="white"
+            />
+          </div>
           {actionData?.url && (
             <div className="mb-4">
-              <p className="text-xs italic text-green-500">
+              <p className="break-all text-xs italic text-green-500">
                 Generated link:{' '}
                 <a
                   className="inline-block align-baseline text-sm text-blue-500 hover:text-blue-800"
