@@ -20,6 +20,7 @@ export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'League Ranked Overlay',
   viewport: 'width=device-width,initial-scale=1',
+  description: 'Create a stream overlay showcasing your League of Legends rank',
 })
 
 interface DocumentProps {
