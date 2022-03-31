@@ -11,7 +11,7 @@ import {
 import { romanToNumber } from '~/utils.server'
 
 const MILLISECONDS_PER_SECOND = 1000
-const RESET_INTERVAL = 60 * 30 // 30 Minutes
+const RESET_INTERVAL = 60 * 20 // 20 Minutes
 
 type LoaderData = {
   summonerName: string
@@ -22,6 +22,7 @@ type LoaderData = {
   losses: number
   leaguePoints: number
   image: string
+  textColor: string
 }
 
 export const headers: HeadersFunction = () => ({
@@ -39,6 +40,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!isValidRegion(region))
     throw new Response('Invalid region provided', { status: 400 })
 
+  const textColor = String(searchParams.get('textColor'))
+
   try {
     const { id, name } = await getSummonerByName(summonerName, region)
     const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
@@ -46,7 +49,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       region
     )
     const rankNumber = romanToNumber(rank)
-    const rankImage = `/assets/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
+    const image = `/assets/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
 
     return json<LoaderData>({
       summonerName: name,
@@ -56,7 +59,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       wins,
       losses,
       leaguePoints,
-      image: rankImage,
+      image,
+      textColor,
     })
   } catch (error) {
     if (error instanceof SummonerNotFoundError)
@@ -66,6 +70,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (error instanceof RiotAPIError)
       throw new Response('Riot API error', { status: 500 })
   }
+}
+
+function capitalize(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 }
 
 export default function Overlay() {
@@ -78,7 +86,9 @@ export default function Overlay() {
     losses,
     leaguePoints,
     image,
+    textColor,
   } = useLoaderData()
+  const winRatio = wins / (wins + losses)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -89,17 +99,26 @@ export default function Overlay() {
   })
 
   return (
-    <>
-      <img className="h-16 w-16" src={image} alt={`${tier} ${rank}`} />
-      <h1>
-        {summonerName} <small>{region}</small>
-      </h1>
-      <h2>
-        {tier} {rank} {leaguePoints}LP
-      </h2>
-      <p>
-        {wins}W {losses}L
-      </p>
-    </>
+    <div
+      className="flex items-center justify-start"
+      style={{ color: textColor }}
+    >
+      <div>
+        <img className="h-24 w-24" src={image} alt={`${tier} ${rank}`} />
+      </div>
+      <div>
+        <div className="font-bold">
+          {summonerName} <sup>{region}</sup>
+        </div>
+        <h2>
+          {capitalize(tier)} {rank} {leaguePoints}LP
+        </h2>
+        <p>
+          <span className="text-green-500">{wins}W</span>{' '}
+          <span className="text-red-500">{losses}L</span>{' '}
+          <span className="text-sm">({(100 * winRatio).toFixed(1)}%)</span>
+        </p>
+      </div>
+    </div>
   )
 }
