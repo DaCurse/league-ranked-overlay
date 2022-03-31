@@ -56,8 +56,8 @@ export default function Index() {
           method="post"
           replace
         >
-          <h1 className="mb-4 text-2xl font-bold text-slate-700 dark:text-white">
-            Generate an overlay Link
+          <h1 className="mb-4 text-center text-2xl font-bold text-slate-700 dark:text-white">
+            Generate Overlay Link
           </h1>
           <div className="mb-4">
             <label
@@ -109,7 +109,7 @@ export default function Index() {
               type="color"
               id="textColor"
               name="textColor"
-              defaultValue="white"
+              defaultValue="#ffffff"
             />
           </div>
           {actionData?.url && (
