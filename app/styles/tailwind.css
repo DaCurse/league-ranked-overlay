@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+
+@font-face {
+  font-family: 'Beaufort';
+  src: url('/assets/fonts/Beaufort-Regular.woff2');
+}
+
+@tailwind utilities;
