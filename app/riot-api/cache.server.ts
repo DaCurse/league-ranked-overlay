@@ -1,7 +1,7 @@
 import LRUCache from 'lru-cache'
 
-const MAX_CACHE_ENTRIES = 500
-const MAX_TTL = 1000 * 60 * 30 // 30 Minutes
+const MAX_CACHE_ENTRIES = 1000
+const MAX_TTL = 1000 * 60 * 20 // 20 Minutes
 
 let cache: LRUCache<string, any>
 
