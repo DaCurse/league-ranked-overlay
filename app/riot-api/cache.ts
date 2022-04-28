@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'production') {
 
 export async function withCache<TData>(
   key: string,
-  callback: (...args: any[]) => Promise<TData>
+  callback: () => Promise<TData>
 ): Promise<TData> {
   const cached = cache.get(key)
   if (cached) return cached
