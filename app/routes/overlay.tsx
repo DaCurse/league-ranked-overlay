@@ -85,6 +85,7 @@ export default function Overlay() {
     textColor,
   } = useLoaderData()
   const winRatio = wins / (wins + losses)
+  const winPrecentage = (100 * winRatio).toFixed(1)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -112,7 +113,7 @@ export default function Overlay() {
         <p className="text-sm">
           <span className="text-green-500">{wins}W</span>{' '}
           <span className="text-red-500">{losses}L</span>{' '}
-          <span>({(100 * winRatio).toFixed(1)}%)</span>
+          <span>({winPrecentage}%)</span>
         </p>
       </div>
     </div>
