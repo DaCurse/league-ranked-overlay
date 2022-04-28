@@ -1,18 +1,19 @@
-import type { LeagueEntryDTO, SummonerDTO } from './api-types'
 import { withCache } from './cache'
 import {
   QueueEntryNotFoundError,
   RiotAPIError,
   SummonerNotFoundError,
 } from './errors'
-import type { Region } from './region'
-import { getRegionURL } from './region'
-
-// Making this an enum/record will allow fetching ranked data for other queue types
-const SOLO_QUEUE = 'RANKED_SOLO_5x5'
+import type {
+  LeagueEntryDTO,
+  QueueTypeId,
+  RegionId,
+  SummonerDTO,
+} from './types'
+import { getRegionURL } from './types'
 
 function fetchLeagueAPI(
-  region: Region,
+  region: RegionId,
   endpoint: string,
   options: RequestInit = {}
 ) {
@@ -24,7 +25,7 @@ function fetchLeagueAPI(
   })
 }
 
-export function getSummonerByName(name: string, region: Region) {
+export function getSummonerByName(name: string, region: RegionId) {
   return withCache<SummonerDTO>(`${region}-${name}`, async () => {
     const response = await fetchLeagueAPI(
       region,
@@ -41,7 +42,11 @@ export function getSummonerByName(name: string, region: Region) {
   })
 }
 
-export function getLeagueEntry(summonerId: string, region: Region) {
+export function getLeagueEntry(
+  summonerId: string,
+  region: RegionId,
+  queueType: QueueTypeId
+) {
   return withCache<LeagueEntryDTO>(`${region}-${summonerId}`, async () => {
     const response = await fetchLeagueAPI(
       region,
@@ -55,7 +60,7 @@ export function getLeagueEntry(summonerId: string, region: Region) {
 
     const entries = await response.json()
     const soloQueueEntry = entries.find(
-      (entry: LeagueEntryDTO) => entry.queueType === SOLO_QUEUE
+      (entry: LeagueEntryDTO) => entry.queueType === queueType
     )
     if (!soloQueueEntry) throw new QueueEntryNotFoundError()
 
