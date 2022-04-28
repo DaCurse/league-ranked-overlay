@@ -26,7 +26,7 @@ function fetchLeagueAPI(
 }
 
 export function getSummonerByName(name: string, region: RegionId) {
-  return withCache<SummonerDTO>(`${region}-${name}`, async () => {
+  return withCache<SummonerDTO>(`${name}-${region}`, async () => {
     const response = await fetchLeagueAPI(
       region,
       `lol/summoner/v4/summoners/by-name/${name}`
@@ -47,23 +47,26 @@ export function getLeagueEntry(
   region: RegionId,
   queueType: QueueTypeId
 ) {
-  return withCache<LeagueEntryDTO>(`${region}-${summonerId}`, async () => {
-    const response = await fetchLeagueAPI(
-      region,
-      `lol/league/v4/entries/by-summoner/${summonerId}`
-    )
+  return withCache<LeagueEntryDTO>(
+    `${summonerId}-${region}-${queueType}`,
+    async () => {
+      const response = await fetchLeagueAPI(
+        region,
+        `lol/league/v4/entries/by-summoner/${summonerId}`
+      )
 
-    if (response.status !== 200) {
-      console.error(await response.json())
-      throw new RiotAPIError()
+      if (response.status !== 200) {
+        console.error(await response.json())
+        throw new RiotAPIError()
+      }
+
+      const entries = await response.json()
+      const soloQueueEntry = entries.find(
+        (entry: LeagueEntryDTO) => entry.queueType === queueType
+      )
+      if (!soloQueueEntry) throw new QueueEntryNotFoundError()
+
+      return soloQueueEntry
     }
-
-    const entries = await response.json()
-    const soloQueueEntry = entries.find(
-      (entry: LeagueEntryDTO) => entry.queueType === queueType
-    )
-    if (!soloQueueEntry) throw new QueueEntryNotFoundError()
-
-    return soloQueueEntry
-  })
+  )
 }
