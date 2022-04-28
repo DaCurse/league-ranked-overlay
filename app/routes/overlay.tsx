@@ -1,21 +1,22 @@
 import { useEffect } from 'react'
-import { HeadersFunction, json, LoaderFunction, useLoaderData } from 'remix'
+import type { HeadersFunction, LoaderFunction } from 'remix'
+import { json, useLoaderData } from 'remix'
+import { capitalize, romanToNumber } from '~/common'
 import {
   getLeagueEntry,
   getSummonerByName,
-  isValidRegion,
   QueueEntryNotFoundError,
   RiotAPIError,
   SummonerNotFoundError,
 } from '~/riot-api'
-import { romanToNumber } from '~/utils.server'
+import { QUEUE_TYPES, REGIONS } from '~/riot-api/types'
 
 const MILLISECONDS_PER_SECOND = 1000
 const RESET_INTERVAL = 60 * 20 // 20 Minutes
 
 type LoaderData = {
   summonerName: string
-  region: string
+  regionName: string
   tier: string
   rank: string
   wins: number
@@ -36,24 +37,31 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (typeof summonerName !== 'string')
     throw new Response('No summoner name provided', { status: 400 })
 
-  const region = String(searchParams.get('region')).toUpperCase()
-  if (!isValidRegion(region))
+  const regionIndex = Number(searchParams.get('region'))
+  if (REGIONS[regionIndex] === undefined)
     throw new Response('Invalid region provided', { status: 400 })
+  const region = REGIONS[regionIndex]
+
+  const queueTypeIndex = Number(searchParams.get('queueType'))
+  if (QUEUE_TYPES[queueTypeIndex] === undefined)
+    throw new Response('Invalid queue type provided', { status: 400 })
+  const queueType = QUEUE_TYPES[queueTypeIndex]
 
   const textColor = String(searchParams.get('textColor'))
 
   try {
-    const { id, name } = await getSummonerByName(summonerName, region)
+    const { id, name } = await getSummonerByName(summonerName, region.id)
     const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
       id,
-      region
+      region.id,
+      queueType.id
     )
     const rankNumber = romanToNumber(rank)
     const image = `/assets/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
 
     return json<LoaderData>({
       summonerName: name,
-      region,
+      regionName: region.name,
       tier,
       rank,
       wins,
@@ -72,10 +80,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 }
 
-function capitalize(word: string) {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-}
-
 export default function Overlay() {
   const {
     summonerName,
@@ -89,6 +93,7 @@ export default function Overlay() {
     textColor,
   } = useLoaderData()
   const winRatio = wins / (wins + losses)
+  const winPrecentage = (100 * winRatio).toFixed(1)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -116,7 +121,7 @@ export default function Overlay() {
         <p className="text-sm">
           <span className="text-green-500">{wins}W</span>{' '}
           <span className="text-red-500">{losses}L</span>{' '}
-          <span>({(100 * winRatio).toFixed(1)}%)</span>
+          <span>({winPrecentage}%)</span>
         </p>
       </div>
     </div>

@@ -1,20 +1,7 @@
 import { useEffect, useRef } from 'react'
-import {
-  ActionFunction,
-  Form,
-  json,
-  LoaderFunction,
-  useActionData,
-  useLoaderData,
-  useTransition,
-} from 'remix'
-import { Region, regions } from '~/riot-api'
-
-type LoaderData = Region[]
-
-export const loader: LoaderFunction = async () => {
-  return json<LoaderData>(Object.keys(regions) as Region[])
-}
+import type { ActionFunction } from 'remix'
+import { Form, json, useActionData, useTransition } from 'remix'
+import { QUEUE_TYPES, REGIONS } from '~/riot-api/types'
 
 type ActionData = { url: string }
 
@@ -23,8 +10,14 @@ export const action: ActionFunction = async ({ request }) => {
   const summonerName = String(formData.get('summonerName'))
   const region = String(formData.get('region')).toUpperCase()
   const textColor = String(formData.get('textColor'))
+  const queueType = String(formData.get('queueType'))
 
-  const searchParams = new URLSearchParams({ summonerName, region, textColor })
+  const searchParams = new URLSearchParams({
+    summonerName,
+    region,
+    textColor,
+    queueType,
+  })
 
   return json<ActionData>({
     url: `/overlay?${searchParams}`,
@@ -32,7 +25,6 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function Index() {
-  const loaderData = useLoaderData<LoaderData>()
   const actionData = useActionData<ActionData>()
   const transition = useTransition()
 
@@ -89,9 +81,28 @@ export default function Index() {
               id="region"
               name="region"
             >
-              {loaderData.map(region => (
-                <option key={region} value={region}>
-                  {region}
+              {REGIONS.map((region, index) => (
+                <option key={region.id} value={index}>
+                  {region.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              className="mb-2 block text-sm font-bold text-slate-700 dark:text-white"
+              htmlFor="queueType"
+            >
+              Queue
+            </label>
+            <select
+              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow focus:outline-none "
+              id="queueType"
+              name="queueType"
+            >
+              {QUEUE_TYPES.map((queueType, index) => (
+                <option key={queueType.id} value={index}>
+                  {queueType.name}
                 </option>
               ))}
             </select>

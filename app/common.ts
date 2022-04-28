@@ -1,3 +1,7 @@
+export function capitalize(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+}
+
 export function romanToNumber(roman: string): number {
   const romanMap: Record<string, number> = {
     I: 1,
