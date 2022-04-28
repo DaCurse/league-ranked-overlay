@@ -1,10 +1,10 @@
-import { withCache } from './cache.server'
+import { withCache } from './cache'
 import {
   QueueEntryNotFoundError,
   RiotAPIError,
   SummonerNotFoundError,
-} from './errors.server'
-import { getRegionURL, Region } from './region.server'
+} from './errors'
+import { getRegionURL, Region } from './region'
 
 export interface SummonerDTO {
   accountId: string

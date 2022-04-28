@@ -1,20 +1,6 @@
 import { useEffect, useRef } from 'react'
-import {
-  ActionFunction,
-  Form,
-  json,
-  LoaderFunction,
-  useActionData,
-  useLoaderData,
-  useTransition,
-} from 'remix'
-import { Region, regions } from '~/riot-api'
-
-type LoaderData = Region[]
-
-export const loader: LoaderFunction = async () => {
-  return json<LoaderData>(Object.keys(regions) as Region[])
-}
+import { ActionFunction, Form, json, useActionData, useTransition } from 'remix'
+import { regions } from '~/riot-api'
 
 type ActionData = { url: string }
 
@@ -32,7 +18,6 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function Index() {
-  const loaderData = useLoaderData<LoaderData>()
   const actionData = useActionData<ActionData>()
   const transition = useTransition()
 
@@ -89,7 +74,7 @@ export default function Index() {
               id="region"
               name="region"
             >
-              {loaderData.map(region => (
+              {Object.keys(regions).map(region => (
                 <option key={region} value={region}>
                   {region}
                 </option>
