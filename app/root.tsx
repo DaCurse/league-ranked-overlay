@@ -1,10 +1,11 @@
+import type {
+  LinksFunction,
+  MetaFunction} from 'remix';
 import {
   Link,
   Links,
-  LinksFunction,
   LiveReload,
   Meta,
-  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
