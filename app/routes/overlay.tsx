@@ -74,7 +74,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (error instanceof SummonerNotFoundError)
       throw new Response('Summoner not found', { status: 404 })
     if (error instanceof QueueEntryNotFoundError)
-      throw new Response('No solo queue data found', { status: 404 })
+      throw new Response(`No ${queueType.name} data found`, { status: 404 })
     if (error instanceof RiotAPIError)
       throw new Response('Riot API error', { status: 500 })
   }
@@ -109,7 +109,11 @@ export default function Overlay() {
       style={{ color: textColor }}
     >
       <div>
-        <img className="h-24 w-24" src={image} alt={`${tier} ${rank}`} />
+        <img
+          className="h-100[px] w-[100px]"
+          src={image}
+          alt={`${tier} ${rank}`}
+        />
       </div>
       <div>
         <div className="font-beaufort text-lg font-bold">
