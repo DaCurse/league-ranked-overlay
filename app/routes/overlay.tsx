@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { HeadersFunction, json, LoaderFunction, useLoaderData } from 'remix'
+import { capitalize, romanToNumber } from '~/common'
 import {
   getLeagueEntry,
   getSummonerByName,
@@ -8,7 +9,6 @@ import {
   RiotAPIError,
   SummonerNotFoundError,
 } from '~/riot-api'
-import { romanToNumber } from '~/utils.server'
 
 const MILLISECONDS_PER_SECOND = 1000
 const RESET_INTERVAL = 60 * 20 // 20 Minutes
@@ -70,10 +70,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (error instanceof RiotAPIError)
       throw new Response('Riot API error', { status: 500 })
   }
-}
-
-function capitalize(word: string) {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 }
 
 export default function Overlay() {
