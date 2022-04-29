@@ -11,10 +11,3 @@ export class SummonerNotFoundError extends Error {
     this.name = 'SummonerNotFoundError'
   }
 }
-
-export class QueueEntryNotFoundError extends Error {
-  constructor(message?: string) {
-    super(message)
-    this.name = 'QueueEntryNotFoundError'
-  }
-}

@@ -1,9 +1,5 @@
 import { withCache } from './cache'
-import {
-  QueueEntryNotFoundError,
-  RiotAPIError,
-  SummonerNotFoundError,
-} from './errors'
+import { RiotAPIError, SummonerNotFoundError } from './errors'
 import type {
   LeagueEntryDTO,
   QueueTypeId,
@@ -13,11 +9,12 @@ import type {
 import { getRegionURL } from './types'
 
 function fetchLeagueAPI(
-  region: RegionId,
+  regionId: RegionId,
   endpoint: string,
   options: RequestInit = {}
 ) {
-  return fetch(`${getRegionURL(region)}${endpoint}`, {
+  const url = new URL(endpoint, getRegionURL(regionId))
+  return fetch(url.toString(), {
     headers: {
       'X-Riot-Token': String(process.env.RIOT_TOKEN),
     },
@@ -29,7 +26,7 @@ export function getSummonerByName(name: string, regionId: RegionId) {
   return withCache<SummonerDTO>(`${name}-${regionId}`, async () => {
     const response = await fetchLeagueAPI(
       regionId,
-      `lol/summoner/v4/summoners/by-name/${name}`
+      `/lol/summoner/v4/summoners/by-name/${name}`
     )
 
     if (response.status !== 200) {
@@ -47,12 +44,12 @@ export function getLeagueEntry(
   regionId: RegionId,
   queueTypeId: QueueTypeId
 ) {
-  return withCache<LeagueEntryDTO>(
+  return withCache<LeagueEntryDTO | null>(
     `${summonerId}-${regionId}-${queueTypeId}`,
     async () => {
       const response = await fetchLeagueAPI(
         regionId,
-        `lol/league/v4/entries/by-summoner/${summonerId}`
+        `/lol/league/v4/entries/by-summoner/${summonerId}`
       )
 
       if (response.status !== 200) {
@@ -60,13 +57,12 @@ export function getLeagueEntry(
         throw new RiotAPIError()
       }
 
-      const entries = await response.json()
-      const queueEntry = entries.find(
+      const entries: LeagueEntryDTO[] = await response.json()
+      const entry = entries.find(
         (entry: LeagueEntryDTO) => entry.queueType === queueTypeId
       )
-      if (!queueEntry) throw new QueueEntryNotFoundError()
 
-      return queueEntry
+      return entry ?? null
     }
   )
 }

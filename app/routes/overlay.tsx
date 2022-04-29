@@ -5,7 +5,6 @@ import { capitalize, romanToNumber } from '~/common'
 import {
   getLeagueEntry,
   getSummonerByName,
-  QueueEntryNotFoundError,
   RiotAPIError,
   SummonerNotFoundError,
 } from '~/riot-api'
@@ -51,13 +50,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   try {
     const { id, name } = await getSummonerByName(summonerName, region.id)
-    const { tier, rank, wins, losses, leaguePoints } = await getLeagueEntry(
-      id,
-      region.id,
-      queueType.id
-    )
+    const entry = await getLeagueEntry(id, region.id, queueType.id)
+    if (!entry) {
+      // TODO: Return data for an unranked summoner
+      return
+    }
+    const { tier, rank, leaguePoints, wins, losses } = entry
     const rankNumber = romanToNumber(rank)
-    const image = `/assets/ranks/${tier.toLowerCase()}_${rankNumber}.webp`
+    const image = `/assets/ranks/full/${tier.toLowerCase()}_${rankNumber}.webp`
 
     return json<LoaderData>({
       summonerName: name,
@@ -73,8 +73,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   } catch (error) {
     if (error instanceof SummonerNotFoundError)
       throw new Response('Summoner not found', { status: 404 })
-    if (error instanceof QueueEntryNotFoundError)
-      throw new Response(`No ${queueType.name} data found`, { status: 404 })
     if (error instanceof RiotAPIError)
       throw new Response('Riot API error', { status: 500 })
   }
