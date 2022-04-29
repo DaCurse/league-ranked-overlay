@@ -11,12 +11,14 @@ export const action: ActionFunction = async ({ request }) => {
   const region = String(formData.get('region')).toUpperCase()
   const textColor = String(formData.get('textColor'))
   const queueType = String(formData.get('queueType'))
+  const style = String(formData.get('style'))
 
   const searchParams = new URLSearchParams({
     summonerName,
     region,
     textColor,
     queueType,
+    style,
   })
 
   return json<ActionData>({
@@ -67,6 +69,7 @@ export default function Index() {
               required
               minLength={3}
               maxLength={16}
+              tabIndex={1}
             />
           </div>
           <div className="mb-4">
@@ -115,13 +118,43 @@ export default function Index() {
               Text Color
             </label>
             <input
-              ref={inputRef}
               className="focus:shadow-outline rounded border leading-tight shadow focus:outline-none"
               type="color"
               id="textColor"
               name="textColor"
               defaultValue="#ffffff"
             />
+          </div>
+          <div className="mb-4">
+            <div className="mb-2 block text-sm font-bold text-slate-700 dark:text-white">
+              Style
+            </div>
+            <input
+              type="radio"
+              name="style"
+              id="styleFull"
+              className="p-1"
+              value="full"
+            />
+            <label
+              htmlFor="styleFull"
+              className="mx-1.5 text-slate-700 dark:text-white"
+            >
+              Full
+            </label>
+            <input
+              type="radio"
+              name="style"
+              id="styleCompact"
+              className="p-1"
+              value="compact"
+            />
+            <label
+              htmlFor="styleCompact"
+              className="mx-1.5 text-slate-700 dark:text-white"
+            >
+              Compact
+            </label>
           </div>
           {actionData?.url && (
             <div className="mb-4">
