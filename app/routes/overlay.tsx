@@ -15,7 +15,7 @@ const RESET_INTERVAL = 60 * 20 // 20 Minutes
 
 type LoaderData = {
   summonerName: string
-  regionName: string
+  regionAbbr: string
   tier: string
   rank: string
   wins: number
@@ -51,17 +51,29 @@ export const loader: LoaderFunction = async ({ request }) => {
   try {
     const { id, name } = await getSummonerByName(summonerName, region.id)
     const entry = await getLeagueEntry(id, region.id, queueType.id)
+
     if (!entry) {
-      // TODO: Return data for an unranked summoner
-      return
+      const image = '/assets/ranks/full/unranked.webp'
+      return json<LoaderData>({
+        summonerName: name,
+        regionAbbr: region.abbr,
+        tier: 'UNRANKED',
+        rank: '',
+        wins: 0,
+        losses: 0,
+        leaguePoints: 0,
+        image,
+        textColor,
+      })
     }
+
     const { tier, rank, leaguePoints, wins, losses } = entry
     const rankNumber = romanToNumber(rank)
     const image = `/assets/ranks/full/${tier.toLowerCase()}_${rankNumber}.webp`
 
     return json<LoaderData>({
       summonerName: name,
-      regionName: region.name,
+      regionAbbr: region.abbr,
       tier,
       rank,
       wins,
@@ -81,7 +93,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Overlay() {
   const {
     summonerName,
-    region,
+    regionAbbr,
     tier,
     rank,
     wins,
@@ -89,8 +101,8 @@ export default function Overlay() {
     leaguePoints,
     image,
     textColor,
-  } = useLoaderData()
-  const winRatio = wins / (wins + losses)
+  } = useLoaderData<LoaderData>()
+  const winRatio = wins + losses === 0 ? 0 : wins / (wins + losses)
   const winPrecentage = (100 * winRatio).toFixed(1)
 
   useEffect(() => {
@@ -103,7 +115,7 @@ export default function Overlay() {
 
   return (
     <div
-      className="flex items-center justify-start "
+      className="flex items-center justify-start"
       style={{ color: textColor }}
     >
       <div>
@@ -115,10 +127,13 @@ export default function Overlay() {
       </div>
       <div>
         <div className="font-beaufort text-lg font-bold">
-          {summonerName} <sup>{region}</sup>
+          {summonerName} <sup className="text-xs">{regionAbbr}</sup>
         </div>
         <div>
-          {capitalize(tier)} {rank} {leaguePoints}LP
+          {capitalize(tier)} {rank}{' '}
+          <span className="mr-2 rounded bg-gray-500 bg-opacity-30 px-1.5 py-0.5 text-xs font-semibold">
+            {leaguePoints} LP
+          </span>
         </div>
         <p className="text-sm">
           <span className="text-green-500">{wins}W</span>{' '}
