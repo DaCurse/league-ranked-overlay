@@ -1,5 +1,6 @@
+import type { ReactNode} from 'react';
 import { useEffect } from 'react'
-import type { HeadersFunction, LoaderFunction } from 'remix'
+import type { HeadersFunction, LoaderFunction} from 'remix';
 import { json, useLoaderData } from 'remix'
 import { capitalize, romanToNumber } from '~/common'
 import {
@@ -13,7 +14,7 @@ import { QUEUE_TYPES, REGIONS } from '~/riot-api/types'
 const MILLISECONDS_PER_SECOND = 1000
 const RESET_INTERVAL = 60 * 20 // 20 Minutes
 
-type LoaderData = {
+interface LoaderData {
   summonerName: string
   regionAbbr: string
   tier: string
@@ -90,34 +91,39 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 }
 
-export default function Overlay() {
-  const {
-    summonerName,
-    regionAbbr,
-    tier,
-    rank,
-    wins,
-    losses,
-    leaguePoints,
-    image,
-    textColor,
-  } = useLoaderData<LoaderData>()
+function Badge({ children }: { children: ReactNode }) {
+  return (
+    <span className="mr-2 rounded bg-gray-500 bg-opacity-30 px-1.5 py-0.5 text-xs font-semibold">
+      {children}
+    </span>
+  )
+}
+
+interface FullOverlayProps {
+  summonerName: string
+  regionAbbr: string
+  tier: string
+  rank: string
+  wins: number
+  losses: number
+  leaguePoints: number
+  image: string
+}
+function FullOverlay({
+  summonerName,
+  regionAbbr,
+  tier,
+  rank,
+  wins,
+  losses,
+  leaguePoints,
+  image,
+}: FullOverlayProps) {
   const winRatio = wins + losses === 0 ? 0 : wins / (wins + losses)
   const winPrecentage = (100 * winRatio).toFixed(1)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      window.location.reload()
-    }, MILLISECONDS_PER_SECOND * RESET_INTERVAL)
-
-    return () => clearInterval(interval)
-  })
-
   return (
-    <div
-      className="flex items-center justify-start"
-      style={{ color: textColor }}
-    >
+    <>
       <div>
         <img
           className="h-100[px] w-[100px]"
@@ -130,10 +136,7 @@ export default function Overlay() {
           {summonerName} <sup className="text-xs">{regionAbbr}</sup>
         </div>
         <div>
-          {capitalize(tier)} {rank}{' '}
-          <span className="mr-2 rounded bg-gray-500 bg-opacity-30 px-1.5 py-0.5 text-xs font-semibold">
-            {leaguePoints} LP
-          </span>
+          {capitalize(tier)} {rank} <Badge>{leaguePoints} LP</Badge>
         </div>
         <p className="text-sm">
           <span className="text-green-500">{wins}W</span>{' '}
@@ -141,6 +144,46 @@ export default function Overlay() {
           <span>({winPrecentage}%)</span>
         </p>
       </div>
+    </>
+  )
+}
+
+export default function Overlay() {
+  const {
+    summonerName,
+    regionAbbr,
+    tier,
+    rank,
+    wins,
+    losses,
+    leaguePoints,
+    image,
+    textColor,
+  } = useLoaderData<LoaderData>()
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.location.reload()
+    }, RESET_INTERVAL * MILLISECONDS_PER_SECOND)
+
+    return () => clearTimeout(timeout)
+  })
+
+  return (
+    <div
+      className="flex items-center justify-start"
+      style={{ color: textColor }}
+    >
+      <FullOverlay
+        summonerName={summonerName}
+        regionAbbr={regionAbbr}
+        tier={tier}
+        rank={rank}
+        wins={wins}
+        losses={losses}
+        leaguePoints={leaguePoints}
+        image={image}
+      />
     </div>
   )
 }
