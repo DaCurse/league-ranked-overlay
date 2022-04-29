@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "generate:css": "tailwindcss -i ./app/styles/tailwind.css -o ./app/styles/tailwind_out.css",
     "postinstall": "remix setup node",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve build",
     "typecheck": "tsc -b"
   },
