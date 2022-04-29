@@ -1,6 +1,4 @@
-import type {
-  LinksFunction,
-  MetaFunction} from 'remix';
+import type { LinksFunction, MetaFunction } from 'remix'
 import {
   Link,
   Links,
@@ -15,6 +13,14 @@ import tailwindStylesheetUrl from './styles/tailwind_out.css'
 
 export const links: LinksFunction = () => {
   return [
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+    },
     { rel: 'stylesheet', href: tailwindStylesheetUrl },
     {
       rel: 'stylesheet',
@@ -38,12 +44,6 @@ function Document({ children }: DocumentProps) {
   return (
     <html lang="en" className="h-full">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
         <Meta />
         <Links />
       </head>
