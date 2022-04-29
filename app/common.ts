@@ -24,3 +24,16 @@ export function romanToNumber(roman: string): number {
 
   return total
 }
+
+export function getRankImage(
+  style: 'full' | 'compact',
+  tier: string,
+  rank: string
+) {
+  const rankNumber = romanToNumber(rank)
+  return style === 'full'
+    ? tier.toLocaleLowerCase() === 'unranked'
+      ? `/assets/ranks/full/unranked.webp`
+      : `/assets/ranks/full/${tier.toLowerCase()}_${rankNumber}.webp`
+    : `/assets/ranks/compact/${tier.toLowerCase()}.webp`
+}
