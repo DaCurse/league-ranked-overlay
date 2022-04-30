@@ -13,9 +13,9 @@
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "cross-env NODE_ENV=development binode -- @remix-run/dev:remix dev",
     "format": "prettier --write .",
-    "generate:css": "tailwindcss ./app/styles/tailwind.css -o ./app/styles/tailwind_out.css",
+    "generate:css": "tailwindcss -i ./app/styles/tailwind.css -o ./app/styles/tailwind_out.css",
     "postinstall": "remix setup node",
-    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "eslint --fix --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve build",
     "typecheck": "tsc -b"
   },

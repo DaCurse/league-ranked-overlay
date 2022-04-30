@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'Beaufort';
-  src: url('/assets/fonts/Beaufort-Regular.woff2');
+  src: url('/assets/fonts/beaufortforlol-regular.otf');
 }
 
 @tailwind utilities;
