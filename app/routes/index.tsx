@@ -135,6 +135,7 @@ export default function Index() {
               id="styleFull"
               className="p-1"
               value="full"
+              defaultChecked
             />
             <label
               htmlFor="styleFull"
