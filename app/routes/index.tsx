@@ -62,14 +62,14 @@ export default function Index() {
             </label>
             <input
               ref={inputRef}
-              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow focus:outline-none "
+              className="w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow"
               type="text"
               id="summonerName"
               name="summonerName"
               required
               minLength={3}
               maxLength={16}
-              tabIndex={1}
+              tabIndex={-1}
             />
           </div>
           <div className="mb-4">
@@ -80,7 +80,7 @@ export default function Index() {
               Region
             </label>
             <select
-              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow focus:outline-none "
+              className="w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow"
               id="region"
               name="region"
             >
@@ -99,7 +99,7 @@ export default function Index() {
               Queue
             </label>
             <select
-              className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow focus:outline-none "
+              className="w-full appearance-none rounded border py-2 px-3 leading-tight text-slate-700 shadow"
               id="queueType"
               name="queueType"
             >
@@ -118,7 +118,7 @@ export default function Index() {
               Text Color
             </label>
             <input
-              className="focus:shadow-outline rounded border leading-tight shadow focus:outline-none"
+              className="rounded border leading-tight shadow"
               type="color"
               id="textColor"
               name="textColor"
@@ -197,7 +197,7 @@ export default function Index() {
           </div>
         </Form>
         <div
-          className="m-2 border-l-4 border-blue-500 bg-blue-100 p-4 text-blue-700 sm:m-0"
+          className="m-2 border-l-4 border-blue-500 bg-blue-100 p-4 text-blue-700"
           role="alert"
         >
           <p className="cursor-pointer font-bold">Disclaimer</p>

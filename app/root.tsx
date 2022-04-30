@@ -14,6 +14,10 @@ import tailwindStylesheetUrl from './styles/tailwind_out.css'
 export const links: LinksFunction = () => {
   return [
     {
+      rel: 'shortcut icon',
+      href: '/favicon.ico',
+    },
+    {
       rel: 'preconnect',
       href: 'https://fonts.googleapis.com',
     },
@@ -34,6 +38,12 @@ export const meta: MetaFunction = () => ({
   title: 'League Ranked Overlay',
   viewport: 'width=device-width,initial-scale=1',
   description: 'Create a stream overlay showcasing your League of Legends rank',
+  'og:title': 'League Ranked Overlay',
+  'og:type': 'website',
+  'og:description':
+    'Create a stream overlay showcasing your League of Legends rank',
+  'og:image': 'https://overlay.dacurse.xyz/assets/logo.png',
+  'og:url': 'https://overlay.dacurse.xyz',
 })
 
 interface DocumentProps {

@@ -2,7 +2,7 @@
 
 [![🚀 Deploy](https://github.com/DaCurse/league-ranked-overlay/actions/workflows/deploy.yml/badge.svg)](https://github.com/DaCurse/league-ranked-overlay/actions/workflows/deploy.yml)
 
-**Try it live: <https://rank-overlay-b0ed.fly.dev/>**
+**Try it live: <https://overlay.dacurse.xyz/>**
 
 ![Full Example](/images/example.png)
 
