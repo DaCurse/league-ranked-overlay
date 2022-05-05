@@ -3,5 +3,7 @@ node_modules
 /build
 /public/build
 .env
+.cache
+.mf
 
 /app/styles/tailwind_out.css

@@ -1,6 +1,7 @@
+import type { ActionFunction } from '@remix-run/cloudflare'
+import { json } from '@remix-run/cloudflare'
+import { Form, useActionData, useTransition } from '@remix-run/react'
 import { useEffect, useRef } from 'react'
-import type { ActionFunction } from 'remix'
-import { Form, json, useActionData, useTransition } from 'remix'
 import { QUEUE_TYPES, REGIONS } from '~/riot-api/types'
 
 type ActionData = { url: string }

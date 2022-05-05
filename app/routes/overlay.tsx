@@ -1,7 +1,8 @@
+import type { HeadersFunction, LoaderFunction } from '@remix-run/cloudflare'
+import { json } from '@remix-run/cloudflare'
+import { useLoaderData } from '@remix-run/react'
 import type { ReactNode } from 'react'
 import { useEffect } from 'react'
-import type { HeadersFunction, LoaderFunction } from 'remix'
-import { json, useLoaderData } from 'remix'
 import { capitalize, getRankImage } from '~/common'
 import {
   getLeagueEntry,

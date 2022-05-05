@@ -1,5 +1,7 @@
 # League Ranked Overlay
 
+## This is a WIP branch checking out deploying to Cloudflare Workers instead of Fly.io
+
 [![🚀 Deploy](https://github.com/DaCurse/league-ranked-overlay/actions/workflows/deploy.yml/badge.svg)](https://github.com/DaCurse/league-ranked-overlay/actions/workflows/deploy.yml)
 
 **Try it live: <https://overlay.dacurse.xyz/>**

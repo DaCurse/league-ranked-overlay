@@ -11,12 +11,13 @@ import { getRegionURL } from './types'
 function fetchLeagueAPI(
   regionId: RegionId,
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  apiKey: string = RIOT_TOKEN
 ) {
   const url = new URL(endpoint, getRegionURL(regionId))
   return fetch(url.toString(), {
     headers: {
-      'X-Riot-Token': String(process.env.RIOT_TOKEN),
+      'X-Riot-Token': apiKey,
     },
     ...options,
   })
