@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { useEffect } from 'react'
-import type { HeadersFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { HeadersFunction, LoaderFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { capitalize, getRankImage } from '~/common'
 import {
   getLeagueEntry,

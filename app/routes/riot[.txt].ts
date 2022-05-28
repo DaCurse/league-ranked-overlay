@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction } from '@remix-run/node'
 
 export const loader: LoaderFunction = () => {
   return new Response('e3ec8a68-feba-41cf-a07b-226495509e8b', {

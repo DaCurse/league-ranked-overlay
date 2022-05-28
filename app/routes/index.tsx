@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import type { ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Form, useActionData, useTransition } from "@remix-run/react";
+import type { ActionFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { Form, useActionData, useTransition } from '@remix-run/react'
 import { QUEUE_TYPES, REGIONS } from '~/riot-api/types'
 
 type ActionData = { url: string }

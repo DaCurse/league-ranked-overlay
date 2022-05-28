@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from '@remix-run/node'
 
 import {
   Link,
@@ -9,7 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-} from "@remix-run/react";
+} from '@remix-run/react'
 
 import tailwindStylesheetUrl from './styles/tailwind_out.css'
 
